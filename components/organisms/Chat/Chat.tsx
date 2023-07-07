@@ -13,6 +13,7 @@ export const Chat = () => {
         >
           <Input
             placeholder="Send a question"
+            type={"text"}
             className={
               "focus:outline-none  bg-gray-800 border-gray-800 text-white f"
             }
