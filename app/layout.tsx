@@ -42,7 +42,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div
             style={{ backgroundImage: `url(/background.svg)` }}
-            className="flex flex-col min-h-screen bg-background"
+            className="flex flex-col h-screen bg-background"
           >
             <Header />
             <main className="flex flex-col flex-1">{children}</main>
