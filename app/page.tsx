@@ -16,7 +16,7 @@ export default function Home() {
         {!vesselId ? (
           <Login setVesselId={setVesselId} />
         ) : (
-          <Chat vesselId={vesselId} />
+          <Chat vesselId={vesselId} setVesselId={setVesselId} />
         )}
       </div>
     </div>

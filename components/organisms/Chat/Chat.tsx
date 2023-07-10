@@ -9,8 +9,9 @@ import { ChatContext } from "./ChatMessages/ChatContext";
 
 export type ChatProps = {
   vesselId: string;
+  setVesselId: (arg: string) => void;
 };
-export const Chat = ({ vesselId }: ChatProps) => {
+export const Chat = ({ vesselId, setVesselId }: ChatProps) => {
   const {
     append,
     reload,
@@ -18,10 +19,15 @@ export const Chat = ({ vesselId }: ChatProps) => {
     input,
     handleInputChange,
     handleSubmit,
+
     isLoading,
   } = useChat({
     body: {
       vesselId,
+    },
+    onError: () => {
+      localStorage.removeItem("vesselId");
+      setVesselId("");
     },
   });
 

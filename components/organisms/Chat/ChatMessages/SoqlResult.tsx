@@ -6,20 +6,25 @@ type ResultTableProps = {
 };
 
 export const SoqlResult = ({ error, result }: ResultTableProps) => {
-  console.log(error);
   if (error) {
     return (
-      <h1 className={"font-semibold text-red-500"}>
+      <h1 className={"font-semibold text-red-500 font-mono"}>
         Error running query, Retrying request.
       </h1>
     );
   }
   const records: any[] = result?.records;
+  const totalSize = result?.totalSize;
   const keys = Object.keys(records?.[0] ?? {}).filter(
     (key) => !isObject(records[0][key]),
   );
+
   if (records?.length === 0) {
-    return <h1 className={"font-semibold text-white"}>No records found</h1>;
+    return totalSize ? (
+      <h1 className={"font-medium text-white font-mono"}>{totalSize}</h1>
+    ) : (
+      <h1 className={"font-medium text-white font-mono"}>0 records found</h1>
+    );
   }
   return (
     <table className=" max-w-full table-auto border-collapse border border-gray-500">

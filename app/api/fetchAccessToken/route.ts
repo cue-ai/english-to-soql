@@ -23,6 +23,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true });
   } catch (err) {
     // console.log(err);
+    // fig out error stuff
     return NextResponse.error();
   }
 }

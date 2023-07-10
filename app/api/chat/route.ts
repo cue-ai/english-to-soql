@@ -14,13 +14,15 @@ export const runtime = "edge";
 export async function POST(req: Request) {
   const { messages, vesselId } = await req.json();
   const accessToken = await kv.get(vesselId);
+  if (!accessToken) throw Error("No access token");
+
   let salesforceData: any = await kv.get(`${vesselId}data`);
   if (!salesforceData) {
     salesforceData = await getSalesforceDescriptions(accessToken as string);
     await kv.set(`${vesselId}data`, salesforceData as string);
   }
   if (!salesforceData) {
-    return NextResponse.error();
+    throw Error("No salesforce data");
   }
   const { stream, handlers } = LangChainStream();
 
@@ -60,7 +62,9 @@ export async function POST(req: Request) {
         ),
         new SystemChatMessage(`The data in the following messages carries information on all the user's custom salesforce fields for each object. 
                 Please use it when constructing queries if relevant. These are the only custom fields this user has and are the only custom ones you can refer to (apart from these you must not include any queries ending in __c).
-                As such, you have knowledge of the user's custom objects/fields, and can only use these.`),
+               `),
+        new SystemChatMessage(`NOTE: You have information on all the custom salesforce fields/objects from the before messages. Please use
+        these and only these. Otherwise only refer to standard objects/fields. `),
         ...(salesforceData?.customFields ?? []).map(
           (obj: any) =>
             new SystemChatMessage(JSON.stringify(obj).replace(/\s/g, "")),
@@ -76,6 +80,8 @@ export async function POST(req: Request) {
     )
     .catch((err) => {
       console.log(err);
+      // throw error
+      // return new NextResponse().status(401);
     });
 
   return new StreamingTextResponse(stream);

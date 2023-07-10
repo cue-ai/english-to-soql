@@ -60,7 +60,7 @@ export const CodeBlock = ({
           className={
             "text-xs text-black py-0 bg-green-400 hover:bg-green-500 text-gray-800"
           }
-          disabled={isLoadingQuery}
+          disabled={isLoadingQuery || isLoading}
           size={"xs"}
           onClick={runQuery}
         >
