@@ -1,6 +1,14 @@
+import { Message } from "ai";
+import { CodeBlock } from "./CodeBlock";
+import { useState } from "react";
+import { SoqlResult } from "./SoqlResult";
+
+type MessageProps = {
+  message: Message;
+};
 export const MessageComponent = ({ message }: MessageProps) => {
   const parts = message?.content.split(/(```[\s\S]*?```)/gm);
-
+  const [queryResult, setQueryResult] = useState<any>({});
   return (
     <div
       key={message.id}
@@ -22,6 +30,7 @@ export const MessageComponent = ({ message }: MessageProps) => {
           if (
             code.startsWith("SOQL") ||
             code.startsWith("soql") ||
+            code.startsWith("sql") ||
             code.startsWith("bash")
           ) {
             code = code.slice(4);
@@ -30,16 +39,32 @@ export const MessageComponent = ({ message }: MessageProps) => {
             code = code.slice(1);
           }
 
-          return <CodeBlock code={code} key={index} />;
+          return (
+            <CodeBlock
+              code={code}
+              key={index}
+              setQueryResult={setQueryResult}
+              queryResult={queryResult}
+            />
+          );
         } else {
           // This is a non-code part
           return (
-            <p key={index} className={"my-0 "}>
-              {part}
-            </p>
+            <>
+              <p key={index} className={"my-0 "}>
+                {part}
+              </p>
+            </>
           );
         }
       })}
+      {/*{message?.role === "user" && <button>Refresh question</button>}*/}
+
+      {queryResult && (
+        <div className={"mt-8"}>
+          <SoqlResult result={queryResult?.result} error={queryResult?.error} />
+        </div>
+      )}
     </div>
   );
 };

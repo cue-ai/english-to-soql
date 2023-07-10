@@ -1,5 +1,51 @@
 import { Button } from "@/components/ui/Button";
-export const Login = () => {
+import { useEffect } from "react";
+import Vessel from "@vesselapi/client-sdk";
+
+export type LoginProps = {
+  setVesselId: (arg: string) => void;
+};
+export const Login = ({ setVesselId }: LoginProps) => {
+  // this is weird, only works when i initialise open like below for some reason
+  let open: any = null;
+  if (typeof document !== "undefined") {
+    // you are safe to use the "document" object here
+    open = Vessel({
+      onSuccess: async (sessionToken) => {
+        // get the access token
+        await fetch("/api/fetchAccessToken", {
+          method: "POST",
+          body: JSON.stringify({ sessionToken }),
+        });
+        localStorage.setItem("vesselId", sessionToken);
+        setVesselId(sessionToken);
+      },
+      onLoad: () => console.log("loaded"),
+      onClose: () => console.log("closed"),
+    }).open;
+  }
+
+  const handleSalesforceLogin = async () => {
+    if (!open) return;
+    await open({
+      integrationId: "salesforce",
+      getSessionToken: async () => {
+        const response = await fetch("/api/fetchSessionToken", {
+          method: "POST",
+        });
+        const json = await response.json();
+        return json?.sessionToken;
+      },
+    });
+  };
+
+  useEffect(() => {
+    const tempVesselId = localStorage.getItem("vesselId");
+    if (tempVesselId) {
+      setVesselId?.(tempVesselId);
+    }
+  }, []);
+
   return (
     <div className={"w-full h-full text-center"}>
       <h1 className="text-7xl font-semibold  bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/20">
@@ -26,6 +72,7 @@ export const Login = () => {
           style={{ backgroundColor: "#1F264B" }}
           className={"mt-4 "}
           size={"sm"}
+          onClick={handleSalesforceLogin}
         >
           Connect your Salesforce
         </Button>
