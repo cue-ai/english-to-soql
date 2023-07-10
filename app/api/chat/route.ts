@@ -81,7 +81,7 @@ export async function POST(req: Request) {
     .catch((err) => {
       console.log(err);
       // throw error
-      // return new NextResponse().status(401);
+      // return new StreamingTextResponse(stream, { status: 401 });
     });
 
   return new StreamingTextResponse(stream);

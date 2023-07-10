@@ -24,6 +24,8 @@ export async function POST(req: Request) {
   } catch (err) {
     // console.log(err);
     // fig out error stuff
-    return NextResponse.error();
+    return new NextResponse("An error occurred", {
+      status: 401,
+    });
   }
 }
