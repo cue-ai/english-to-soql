@@ -1,6 +1,5 @@
 import { isObject } from "radash";
 import { SalesforceQueryResult } from "@/shared/types/salesforceTypes";
-import { useRouter } from "next/navigation";
 
 type ResultTableProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -14,7 +13,6 @@ export const SoqlResult = ({
   result,
   instanceUrl,
 }: ResultTableProps) => {
-  const router = useRouter();
   if (error) {
     return (
       <h1 className={"font-semibold text-red-500 font-mono"}>
