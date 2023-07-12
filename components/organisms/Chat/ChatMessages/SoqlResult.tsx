@@ -27,7 +27,7 @@ export const SoqlResult = ({ error, result }: ResultTableProps) => {
     );
   }
   return (
-    <table className=" max-w-full table-auto border-collapse border border-gray-500">
+    <table className=" max-w-full table-auto overflow-scroll border-collapse border border-gray-500 text-slate-400">
       <thead>
         <tr className={"bg-slate-900"}>
           {keys.map((key) => (

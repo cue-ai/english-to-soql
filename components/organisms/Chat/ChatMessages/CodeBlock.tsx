@@ -17,18 +17,19 @@ export const CodeBlock = ({
 }: CodeBlockProps) => {
   const [isLoadingQuery, setIsLoadingQuery] = useState(false);
   const { append, isLoading } = useContext(ChatContext);
-  console.log(isLoading);
+
   const runQuery = async () => {
     setIsLoadingQuery(true);
-    const vesselId = localStorage.getItem("vesselId");
+    const salesforceId = localStorage.getItem("salesforceId");
     const res = await fetch("/api/runQuery", {
       method: "POST",
-      body: JSON.stringify({ vesselId, query: code }),
+      body: JSON.stringify({ salesforceId, query: code }),
     });
-    const { error, result } = await res.json();
-    console.log(error, result);
+    const data = await res.json();
+    const error = data?.error;
+    const result = data;
+
     const isRanBefore: boolean = Object.keys(queryResult ?? {}).length !== 0;
-    console.log(isRanBefore);
     setQueryResult({ error, result });
     setIsLoadingQuery(false);
     if (error && !isRanBefore) {
@@ -44,6 +45,7 @@ export const CodeBlock = ({
       });
     }
   };
+
   useEffect(() => {
     if (Object.keys(queryResult ?? {}).length !== 0 || isLoading) return;
     runQuery();

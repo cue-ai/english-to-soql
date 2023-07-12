@@ -6,29 +6,32 @@ import {
   SystemChatMessage,
 } from "langchain/schema";
 import { kv } from "@vercel/kv";
-import { NextResponse } from "next/server";
 import { getSalesforceDescriptions } from "./getSalesforceDescriptions";
 
 export const runtime = "edge";
 
 export async function POST(req: Request) {
-  const { messages, vesselId } = await req.json();
-  const accessToken = await kv.get(vesselId);
-  if (!accessToken) throw Error("No access token");
+  const { messages, salesforceId } = await req.json();
+  const cachedRes: any = await kv.get(salesforceId);
+  if (!cachedRes) throw Error("No salesforce token");
 
-  let salesforceData: any = await kv.get(`${vesselId}data`);
+  let salesforceData: any = await kv.get(`${salesforceId}data`);
+
   if (!salesforceData) {
-    salesforceData = await getSalesforceDescriptions(accessToken as string);
-    await kv.set(`${vesselId}data`, salesforceData as string);
+    salesforceData = await getSalesforceDescriptions(
+      cachedRes?.accessToken as string,
+      cachedRes?.refreshToken as string,
+      cachedRes?.instanceUrl as string,
+      salesforceId as string,
+    );
+
+    await kv.set(`${salesforceId}data`, salesforceData as string);
   }
   if (!salesforceData) {
-    throw Error("No salesforce data");
+    throw Error("No salesforce data even after regenerating access token");
   }
   const { stream, handlers } = LangChainStream();
 
-  // const documents= (salesforceData??[]).map((obj:any)=> new Document({pageContent:JSON.stringify(obj)}))
-
-  // console.log(salesforceData)
   const llm = new ChatOpenAI({
     modelName: "gpt-4",
     openAIApiKey: process.env.OPENAI_API_KEY,
@@ -48,10 +51,13 @@ export async function POST(req: Request) {
                 With you, users can seamlessly interact with Salesforce data without needing to learn the intricacies of SOQL.
                 All they need to do is clearly articulate what they want in plain language and you take care of the rest.
                 You are specifically designed to understand these natural language expressions and adeptly convert them into accurate SOQL queries`),
+
         new SystemChatMessage(
           `Each query should be enclosed within triple backticks (\`\`\`). Do not prepend or append any text to the queries so that they can be ran without any changes. Also each response 
           should carry at most one query`,
         ),
+        new SystemChatMessage(`NOTE: You are going to recieve information on all the custom salesforce fields/objects in the next couple of messages. Please use
+        these and only these. Otherwise only refer to standard objects/fields. `),
         new SystemChatMessage(`The data in the following messages carries information on all the user's custom salesforce objects. 
                 Please use it when constructing queries if relevant. These are the only custom objects this user has and are the only custom ones you can refer to.`),
         // ...documents,
@@ -60,11 +66,9 @@ export async function POST(req: Request) {
           (obj: any) =>
             new SystemChatMessage(JSON.stringify(obj).replace(/\s/g, "")),
         ),
-        new SystemChatMessage(`The data in the following messages carries information on all the user's custom salesforce fields for each object. 
+        new SystemChatMessage(`The data in the following messages carries information on all the user's custom salesforce fields for each standard object. 
                 Please use it when constructing queries if relevant. These are the only custom fields this user has and are the only custom ones you can refer to (apart from these you must not include any queries ending in __c).
                `),
-        new SystemChatMessage(`NOTE: You have information on all the custom salesforce fields/objects from the before messages. Please use
-        these and only these. Otherwise only refer to standard objects/fields. `),
         ...(salesforceData?.customFields ?? []).map(
           (obj: any) =>
             new SystemChatMessage(JSON.stringify(obj).replace(/\s/g, "")),

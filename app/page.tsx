@@ -1,22 +1,28 @@
 "use client";
-import Image from "next/image";
-import { Login } from "@/components/organisms/Login";
+
+import { Login } from "@/components/organisms/Login/Login";
 import { Chat } from "@/components/organisms/Chat/Chat";
 import { useState } from "react";
 
 export default function Home() {
-  const [vesselId, setVesselId] = useState("");
+  const [salesforceId, setSalesforceId] = useState("");
+  const [isFirst, setIsFirst] = useState(false);
   return (
     <div className="flex min-h-screen flex-col items-center justify-between px-24  ">
       <div
-        className={`z-10 w-full h-full min-h-screen flex-grow items-center justify-between lg:flex ${
-          !vesselId && "pt-24"
+        className={`z-10 w-full h-full  min-h-screen flex-grow items-center justify-between lg:flex lg:flex-col  ${
+          !salesforceId && "pt-24"
         } `}
       >
-        {!vesselId ? (
-          <Login setVesselId={setVesselId} />
+        {!salesforceId ? (
+          <Login setSalesforceId={setSalesforceId} setIsFirst={setIsFirst} />
         ) : (
-          <Chat vesselId={vesselId} setVesselId={setVesselId} />
+          <Chat
+            salesforceId={salesforceId}
+            setSalesforceId={setSalesforceId}
+            isFirst={isFirst}
+            setIsFirst={setIsFirst}
+          />
         )}
       </div>
     </div>
