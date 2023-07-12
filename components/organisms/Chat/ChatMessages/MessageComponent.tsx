@@ -111,7 +111,13 @@ export const MessageComponent = ({ message }: MessageProps) => {
   };
 
   const downloadQuery = () => {
-    const csv = Papa.unparse(queryResult.result.records);
+    const downloadRecords = queryResult.result.records.map((record) => {
+      const newRecord = { ...record };
+      delete newRecord.attributes;
+
+      return newRecord;
+    });
+    const csv = Papa.unparse(downloadRecords);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     saveAs(blob, "query.csv");
     setDownloadedUrl(true);
