@@ -28,9 +28,9 @@ export const CodeBlock = ({
     const data = await res.json();
     const error = data?.error;
     const result = data;
-
+    const instanceUrl = data?.instanceUrl;
     const isRanBefore: boolean = Object.keys(queryResult ?? {}).length !== 0;
-    setQueryResult({ error, result });
+    setQueryResult({ error, result, instanceUrl });
     setIsLoadingQuery(false);
     if (error && !isRanBefore) {
       const newId = uuidv4();

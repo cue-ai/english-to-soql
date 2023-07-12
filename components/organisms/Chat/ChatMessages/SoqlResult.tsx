@@ -1,13 +1,20 @@
 import { isObject } from "radash";
 import { SalesforceQueryResult } from "@/shared/types/salesforceTypes";
+import { useRouter } from "next/navigation";
 
 type ResultTableProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any;
   result: SalesforceQueryResult;
+  instanceUrl?: string;
 };
 
-export const SoqlResult = ({ error, result }: ResultTableProps) => {
+export const SoqlResult = ({
+  error,
+  result,
+  instanceUrl,
+}: ResultTableProps) => {
+  const router = useRouter();
   if (error) {
     return (
       <h1 className={"font-semibold text-red-500 font-mono"}>
@@ -15,6 +22,7 @@ export const SoqlResult = ({ error, result }: ResultTableProps) => {
       </h1>
     );
   }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const records: any[] = result?.records;
   const totalSize = result?.totalSize;
@@ -32,7 +40,7 @@ export const SoqlResult = ({ error, result }: ResultTableProps) => {
   return (
     <table className=" max-w-full table-auto overflow-scroll border-collapse border border-gray-500 text-slate-400">
       <thead>
-        <tr className={"bg-slate-900"}>
+        <tr className={"bg-slate-900 cursor-pointer"}>
           {keys.map((key) => (
             <th className="border  border-gray-500 px-4 py-2" key={key}>
               {key}
@@ -42,7 +50,14 @@ export const SoqlResult = ({ error, result }: ResultTableProps) => {
       </thead>
       <tbody>
         {records?.map((item, index) => (
-          <tr key={index} className={"bg-slate-900 text-start"}>
+          <tr
+            key={index}
+            className={"bg-slate-900 text-start cursor-pointer"}
+            onClick={() => {
+              if (!instanceUrl) return;
+              window.open(`${instanceUrl}/${item.Id}`);
+            }}
+          >
             {keys.map((key) => (
               <td
                 className="border border-gray-500 px-4 py-2 text-xs"

@@ -41,4 +41,5 @@ export type SalesforceQueryResultWithError = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any;
   result: SalesforceQueryResult;
+  instanceUrl?: string;
 };

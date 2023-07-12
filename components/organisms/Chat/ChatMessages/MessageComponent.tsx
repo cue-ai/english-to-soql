@@ -119,9 +119,9 @@ export const MessageComponent = ({ message }: MessageProps) => {
   return (
     <div
       key={message.id}
-      className={`whitespace-pre-wrap  my-4 bg-gray-800 p-4 rounded-lg ${
+      className={`whitespace-pre-wrap  my-4 bg-gray-800 px-4 pt-4 rounded-lg ${
         message.role === "user"
-          ? "text-slate-400 text-sm"
+          ? "text-slate-400 text-sm "
           : "text-white text-sm border border-gray-600"
       }`}
     >
@@ -153,7 +153,11 @@ export const MessageComponent = ({ message }: MessageProps) => {
 
       {queryResult && (
         <div className={"my-8 w-full overflow-auto"}>
-          <SoqlResult result={queryResult?.result} error={queryResult?.error} />
+          <SoqlResult
+            result={queryResult?.result}
+            error={queryResult?.error}
+            instanceUrl={queryResult?.instanceUrl}
+          />
         </div>
       )}
       {message.role !== "user" &&

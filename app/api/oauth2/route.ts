@@ -24,7 +24,6 @@ export async function POST(req: Request) {
       },
     );
     const data = await res.json();
-    console.log(data);
     const {
       access_token: accessToken,
       instance_url: instanceUrl,

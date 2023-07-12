@@ -14,7 +14,6 @@ export const refreshAccessToken = async (refreshToken: string) => {
       }).toString(),
     },
   );
-  console.log(refreshResponse);
   if (!refreshResponse.ok) {
     throw null;
   }

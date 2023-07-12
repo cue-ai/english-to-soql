@@ -16,7 +16,7 @@ export async function POST(req: Request) {
       salesforceId,
     );
 
-    return NextResponse.json(json);
+    return NextResponse.json({ ...json, instanceUrl: cachedRes.instanceUrl });
   } catch (err) {
     return new NextResponse("Server Error", { status: 520 });
   }
