@@ -19,6 +19,7 @@ export default function Page() {
       }
       router.push("/");
     } catch (err) {
+      router.push("/");
       console.log(err);
     }
   };
@@ -27,6 +28,8 @@ export default function Page() {
     const code = searchParams.get("code");
     if (code) {
       handleTokenExchange(code);
+    } else {
+      router.push("/");
     }
   }, [searchParams]);
 
