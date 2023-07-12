@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/Button";
 import { WelcomeBox } from "./WelcomeBox";
 import { useChat } from "ai/react";
 import { ChatMessages } from "@/components/organisms/Chat/ChatMessages/ChatMessages";
-import React, { createContext } from "react";
+import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ChatContext } from "./ChatMessages/ChatContext";
+import va from "@vercel/analytics";
 
 export type ChatProps = {
   salesforceId: string;
@@ -23,7 +24,6 @@ export const Chat = ({
 }: ChatProps) => {
   const {
     append,
-    reload,
     messages,
     input,
     handleInputChange,
@@ -34,10 +34,10 @@ export const Chat = ({
       salesforceId,
     },
     onError: () => {
-      localStorage.removeItem("salesforceId");
       setSalesforceId("");
     },
     onFinish: () => {
+      va.track("query", { query: input });
       setIsFirst(false);
     },
   });
@@ -50,6 +50,10 @@ export const Chat = ({
       content: arg,
       role: "user",
     });
+  };
+
+  const handleDownload = () => {
+    console.log(messages);
   };
 
   return (
@@ -89,10 +93,10 @@ export const Chat = ({
         </ChatContext.Provider>
       )}
       {/*input box*/}
-      <div className=" flex flex-col items-center justify-center w-full  my-10 fixed bottom-4">
+      <div className=" flex flex-col items-center justify-center w-full  my-10 fixed bottom-4 pointer-events-none">
         <form
           className={
-            "items-center flex mx-auto w-7/12 max-w-2xl  space-x-2 shadow-lg p-4 bg-gray-900 rounded-md"
+            "pointer-events-auto items-center flex mx-auto w-7/12 max-w-2xl  space-x-2 shadow-lg p-4 bg-gray-900 rounded-md"
           }
           onSubmit={handleSubmit}
         >

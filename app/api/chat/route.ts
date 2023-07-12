@@ -7,6 +7,7 @@ import {
 } from "langchain/schema";
 import { kv } from "@vercel/kv";
 import { getSalesforceDescriptions } from "./getSalesforceDescriptions";
+import { NextResponse } from "next/server";
 
 export const runtime = "edge";
 
@@ -27,10 +28,22 @@ export async function POST(req: Request) {
 
     await kv.set(`${salesforceId}data`, salesforceData as string);
   }
+
   if (!salesforceData) {
     throw Error("No salesforce data even after regenerating access token");
   }
+
   const { stream, handlers } = LangChainStream();
+
+  // check count
+  const count: number = (await kv.get(`${salesforceId}count`)) as number;
+  if (count >= 50) {
+    return new NextResponse(
+      "You seem to have exceeded your free trial. Please contact christina@trycue.ai to ask me more questions.",
+    );
+  }
+  if (typeof count === "undefined") throw Error("No count for some reason");
+  await kv.set(`${salesforceId}count`, (count as number) + 1);
 
   const llm = new ChatOpenAI({
     modelName: "gpt-4",
@@ -82,10 +95,11 @@ export async function POST(req: Request) {
       {},
       [handlers],
     )
-    .catch((err) => {
-      console.log(err);
-      // throw error
-      // return new StreamingTextResponse(stream, { status: 401 });
+    .catch((err: any) => {
+      return new StreamingTextResponse(stream, {
+        status: 401,
+        statusText: err?.message as string,
+      });
     });
 
   return new StreamingTextResponse(stream);

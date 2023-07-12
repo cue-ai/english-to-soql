@@ -16,6 +16,7 @@ export const makeApiRequestRefreshingToken = async (
     const newAccessToken = await refreshAccessToken(refreshToken ?? "");
     cachedRes.accessToken = newAccessToken;
     kv.set(salesforceId, cachedRes);
+
     response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${cachedRes?.accessToken}`,

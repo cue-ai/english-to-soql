@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Login } from "@/components/organisms/Login/Login";
 import { Chat } from "@/components/organisms/Chat/Chat";
 import { SoqlResult } from "@/components/organisms/Chat/ChatMessages/SoqlResult";
+import va from "@vercel/analytics";
 
 export type QueryData = {
   code: string;
@@ -28,6 +29,7 @@ export default function QueryResult({ params }: { params: { id: string } }) {
   };
 
   useEffect(() => {
+    va.track("sharedPageViewed", { queryId: id });
     void getQueryData();
   }, [id]);
 

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { kv } from "@vercel/kv";
+import va from "@vercel/analytics";
 
 export async function POST(req: Request) {
   const { code } = await req.json();
@@ -28,17 +29,25 @@ export async function POST(req: Request) {
       access_token: accessToken,
       instance_url: instanceUrl,
       refresh_token: refreshToken,
-      signature,
     } = data;
 
-    console.log(signature, accessToken, instanceUrl, refreshToken);
-    kv.set(signature, {
+    const userRes = await fetch(`${instanceUrl}/services/oauth2/userinfo`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const userData = await userRes.json();
+    const userId = userData.user_id;
+
+    va.track("login", { userId });
+    kv.set(userId, {
       accessToken,
       instanceUrl,
       refreshToken: refreshToken,
     });
+    kv.set(`${userId}count`, 0);
 
-    return NextResponse.json({ salesforceId: signature });
+    return NextResponse.json({ salesforceId: userId });
   } catch (err) {
     console.log(err);
     return NextResponse.error();

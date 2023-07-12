@@ -6,7 +6,8 @@ import { useState } from "react";
 
 export default function Home() {
   const [salesforceId, setSalesforceId] = useState("");
-  const [isFirst, setIsFirst] = useState(false);
+  const [isFirst, setIsFirst] = useState(true);
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-between px-24  ">
       <div
