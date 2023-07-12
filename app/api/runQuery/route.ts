@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { kv } from "@vercel/kv";
-import { makeApiRequestRefreshingToken } from "@/shared/makeApiRequestRefreshingToken";
+import { makeApiRequestRefreshingToken } from "@/shared/ApiHandlers/makeApiRequestRefreshingToken";
+import { SalesforceAuthCache } from "@/shared/types/salesforceTypes";
 
 export async function POST(req: Request) {
   try {
     const { salesforceId, query } = await req.json();
-    const cachedRes: any = await kv.get(salesforceId);
+    const cachedRes: SalesforceAuthCache | null = await kv.get(salesforceId);
     if (!cachedRes) return NextResponse.error();
     const encodedQuery = encodeURIComponent(query);
 

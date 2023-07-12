@@ -1,4 +1,12 @@
-import { makeApiRequestRefreshingToken } from "@/shared/makeApiRequestRefreshingToken";
+import { makeApiRequestRefreshingToken } from "@/shared/ApiHandlers/makeApiRequestRefreshingToken";
+import {
+  SalesforceField,
+  SalesforceQueryResult,
+} from "@/shared/types/salesforceTypes";
+import {
+  CustomObject,
+  CustomFieldsOnObject,
+} from "@/shared/types/salesforceTypes";
 
 export const getSalesforceDescriptions = async (
   accessToken: string,
@@ -10,7 +18,7 @@ export const getSalesforceDescriptions = async (
     "SELECT QualifiedApiName FROM EntityDefinition order by QualifiedApiName";
   const encodedQuery = encodeURIComponent(query);
 
-  const data: any = await makeApiRequestRefreshingToken(
+  const data: SalesforceQueryResult = await makeApiRequestRefreshingToken(
     `${instanceUrl}/services/data/v51.0/query?q=${encodedQuery}`,
     { accessToken, refreshToken, instanceUrl },
     salesforceId,
@@ -20,8 +28,8 @@ export const getSalesforceDescriptions = async (
     (record: { QualifiedApiName: string }) => record.QualifiedApiName,
   );
 
-  const customObjects: any = [];
-  const customFields: any[] = [];
+  const customObjects: CustomObject[] = [];
+  const customFields: CustomFieldsOnObject[] = [];
   // we already know that the access token is valid
   await Promise.all(
     objectNames?.map(async (objectName) => {
@@ -34,23 +42,25 @@ export const getSalesforceDescriptions = async (
 
         if (fieldObject?.result?.data?.custom) {
           const fields = fieldObject?.result?.data?.fields?.map(
-            (field: any) => ({
+            (field: SalesforceField) => ({
               name: field?.name,
               type: field?.type,
             }),
           );
           customObjects.push({ objectName, fields });
         } else {
-          const tempCustomFields = (fieldObject?.result?.data?.fields ?? [])
-            ?.filter((field: any) => field.custom)
-            .map((field: any) => {
+          const tempCustomFields: SalesforceField[] = (
+            fieldObject?.result?.data?.fields ?? []
+          )
+            ?.filter((field: SalesforceField) => field.custom)
+            .map((field: SalesforceField) => {
               return {
                 name: field.name,
                 type: field.type,
               };
             });
           if (customFields?.length ?? 0 > 0)
-            customFields.push({ name: objectName, tempCustomFields });
+            customFields.push({ name: objectName, fields: tempCustomFields });
         }
       } catch (err) {
         console.log(err);

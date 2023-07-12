@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/Button";
 import { useContext, useEffect, useState } from "react";
-import { Message } from "ai";
 import { v4 as uuidv4 } from "uuid";
 import { ChatContext } from "./ChatContext";
+import { SalesforceQueryResultWithError } from "@/shared/types/salesforceTypes";
 
 type CodeBlockProps = {
   code: string;
-  setQueryResult: (arg: any) => void;
-  queryResult: any;
+  setQueryResult: (arg: SalesforceQueryResultWithError) => void;
+  queryResult: SalesforceQueryResultWithError;
 };
 
 export const CodeBlock = ({

@@ -1,4 +1,4 @@
-import { StreamingTextResponse, LangChainStream } from "ai";
+import { StreamingTextResponse, LangChainStream, Message } from "ai";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import {
   AIChatMessage,
@@ -8,28 +8,35 @@ import {
 import { kv } from "@vercel/kv";
 import { getSalesforceDescriptions } from "./getSalesforceDescriptions";
 import { NextResponse } from "next/server";
+import {
+  CachedSalesforceData,
+  CustomFieldsOnObject,
+  CustomObject,
+  SalesforceAuthCache,
+} from "@/shared/types/salesforceTypes";
 
 export const runtime = "edge";
 
 export async function POST(req: Request) {
   const { messages, salesforceId } = await req.json();
-  const cachedRes: any = await kv.get(salesforceId);
+  const cachedRes: SalesforceAuthCache | null = await kv.get(salesforceId);
   if (!cachedRes) throw Error("No salesforce token");
 
-  let salesforceData: any = await kv.get(`${salesforceId}data`);
+  let cachedSalesforceData = (await kv.get(`${salesforceId}data`)) as string;
 
-  if (!salesforceData) {
-    salesforceData = await getSalesforceDescriptions(
+  let salesforceData: CachedSalesforceData;
+  if (!cachedSalesforceData) {
+    cachedSalesforceData = await getSalesforceDescriptions(
       cachedRes?.accessToken as string,
       cachedRes?.refreshToken as string,
       cachedRes?.instanceUrl as string,
       salesforceId as string,
     );
 
-    await kv.set(`${salesforceId}data`, salesforceData as string);
+    await kv.set(`${salesforceId}data`, cachedSalesforceData as string);
   }
 
-  if (!salesforceData) {
+  if (!cachedSalesforceData) {
     throw Error("No salesforce data even after regenerating access token");
   }
 
@@ -50,11 +57,12 @@ export async function POST(req: Request) {
     openAIApiKey: process.env.OPENAI_API_KEY,
     streaming: true,
   });
-  // parse string
+
+  // Needed because sometimes kv returns it as string, and sometimes as json
   try {
-    salesforceData = JSON.parse(salesforceData);
+    salesforceData = JSON.parse(cachedSalesforceData);
   } catch (err) {
-    //     do nothing
+    salesforceData = cachedSalesforceData as unknown as CachedSalesforceData;
   }
 
   llm
@@ -76,17 +84,17 @@ export async function POST(req: Request) {
         // ...documents,
 
         ...(salesforceData?.customObjects ?? []).map(
-          (obj: any) =>
+          (obj: CustomObject) =>
             new SystemChatMessage(JSON.stringify(obj).replace(/\s/g, "")),
         ),
         new SystemChatMessage(`The data in the following messages carries information on all the user's custom salesforce fields for each standard object. 
                 Please use it when constructing queries if relevant. These are the only custom fields this user has and are the only custom ones you can refer to (apart from these you must not include any queries ending in __c).
                `),
         ...(salesforceData?.customFields ?? []).map(
-          (obj: any) =>
+          (obj: CustomFieldsOnObject) =>
             new SystemChatMessage(JSON.stringify(obj).replace(/\s/g, "")),
         ),
-        ...messages.map((m: any) =>
+        ...messages.map((m: Message) =>
           m.role === "user"
             ? new HumanChatMessage(m.content)
             : new AIChatMessage(m.content),
@@ -95,6 +103,7 @@ export async function POST(req: Request) {
       {},
       [handlers],
     )
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .catch((err: any) => {
       return new StreamingTextResponse(stream, {
         status: 401,

@@ -9,6 +9,7 @@ import { BiDownload } from "react-icons/bi";
 import { saveAs } from "file-saver";
 import Papa from "papaparse";
 import va from "@vercel/analytics";
+import { SalesforceQueryResultWithError } from "@/shared/types/salesforceTypes";
 
 type MessageProps = {
   message: Message;
@@ -36,7 +37,10 @@ const cleanCode = (part: string) => {
 
 export const MessageComponent = ({ message }: MessageProps) => {
   const parts = message?.content.split(/(```[\s\S]*?```)/gm);
-  const [queryResult, setQueryResult] = useState<any>({});
+  const [queryResult, setQueryResult] =
+    useState<SalesforceQueryResultWithError>(
+      {} as SalesforceQueryResultWithError,
+    );
   const { messages } = useContext(ChatContext);
 
   const [saveLoading, setSaveLoading] = useState(false);

@@ -52,10 +52,6 @@ export const Chat = ({
     });
   };
 
-  const handleDownload = () => {
-    console.log(messages);
-  };
-
   return (
     <div
       className={`flex flex-col items-center  flex-grow w-full h-full pb-24

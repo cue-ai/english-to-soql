@@ -4,11 +4,12 @@ import { Login } from "@/components/organisms/Login/Login";
 import { Chat } from "@/components/organisms/Chat/Chat";
 import { SoqlResult } from "@/components/organisms/Chat/ChatMessages/SoqlResult";
 import va from "@vercel/analytics";
+import { SalesforceQueryResult } from "@/shared/types/salesforceTypes";
 
 export type QueryData = {
   code: string;
   userContent: string;
-  result: any;
+  result: SalesforceQueryResult;
 };
 
 export default function QueryResult({ params }: { params: { id: string } }) {

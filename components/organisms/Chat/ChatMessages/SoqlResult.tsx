@@ -1,8 +1,10 @@
 import { isObject } from "radash";
+import { SalesforceQueryResult } from "@/shared/types/salesforceTypes";
 
 type ResultTableProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any;
-  result: any;
+  result: SalesforceQueryResult;
 };
 
 export const SoqlResult = ({ error, result }: ResultTableProps) => {
@@ -13,6 +15,7 @@ export const SoqlResult = ({ error, result }: ResultTableProps) => {
       </h1>
     );
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const records: any[] = result?.records;
   const totalSize = result?.totalSize;
   const keys = Object.keys(records?.[0] ?? {}).filter(

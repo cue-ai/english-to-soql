@@ -1,4 +1,4 @@
-import { refreshAccessToken } from "@/shared/refreshAccessToken";
+import { refreshAccessToken } from "./refreshAccessToken";
 import { kv } from "@vercel/kv";
 export const makeApiRequestRefreshingToken = async (
   url: string,
