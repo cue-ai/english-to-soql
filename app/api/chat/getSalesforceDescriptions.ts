@@ -27,46 +27,6 @@ export const getSalesforceDescriptions = async (
   const objectNames: string[] = data.records.map(
     (record: { QualifiedApiName: string }) => record.QualifiedApiName,
   );
-  // const customObjects: CustomObject[] = [];
-  // const customFields: CustomFieldsOnObject[] = [];
-  // we already know that the access token is valid
-  // await Promise.all(
-  //   objectNames?.map(async (objectName) => {
-  //     try {
-  //       const fieldObject = await makeApiRequestRefreshingToken(
-  //         `${instanceUrl}/services/data/v53.0/sobjects/${objectName}/describe`,
-  //         { accessToken, refreshToken, instanceUrl },
-  //         salesforceId,
-  //       );
-  //
-  //       if (fieldObject?.result?.data?.custom) {
-  //         console.log(objectName, "\n");
-  //         const fields = fieldObject?.result?.data?.fields?.map(
-  //           (field: SalesforceField) => ({
-  //             name: field?.name,
-  //             type: field?.type,
-  //           }),
-  //         );
-  //         customObjects.push({ objectName, fields });
-  //       } else {
-  //         const tempCustomFields: SalesforceField[] = (
-  //           fieldObject?.result?.data?.fields ?? []
-  //         )
-  //           ?.filter((field: SalesforceField) => field.custom)
-  //           .map((field: SalesforceField) => {
-  //             return {
-  //               name: field.name,
-  //               type: field.type,
-  //             };
-  //           });
-  //         if (customFields?.length ?? 0 > 0)
-  //           customFields.push({ name: objectName, fields: tempCustomFields });
-  //       }
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   }),
-  // );
 
   const fieldObjects = await Promise.all(
     objectNames.map(async (objectName) => {
