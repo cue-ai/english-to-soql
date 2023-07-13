@@ -26,6 +26,13 @@ export const metadata: Metadata = {
       "Transforming English natural language into Salesforce SOQL queries",
     images: ["https://www.asksalesforce.ai/og"],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Salesforce SOQL Generator",
+    description:
+      '"Transforming English natural language into Salesforce SOQL queries',
+    images: ["https://www.asksalesforce.ai/og"],
+  },
 };
 
 interface RootLayoutProps {
