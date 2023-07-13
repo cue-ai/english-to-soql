@@ -1,8 +1,9 @@
 import { refreshAccessToken } from "./refreshAccessToken";
 import { kv } from "@vercel/kv";
+import { SalesforceAuthCache } from "@/shared/types/salesforceTypes";
 export const makeApiRequestRefreshingToken = async (
   url: string,
-  cachedRes: any,
+  cachedRes: SalesforceAuthCache,
   salesforceId: string,
 ) => {
   const refreshToken = cachedRes?.refreshToken;
@@ -12,7 +13,7 @@ export const makeApiRequestRefreshingToken = async (
     },
   });
 
-  if (response.status === 401) {
+  if (!response.ok) {
     const newAccessToken = await refreshAccessToken(refreshToken ?? "");
     cachedRes.accessToken = newAccessToken;
     kv.set(salesforceId, cachedRes);
@@ -22,11 +23,8 @@ export const makeApiRequestRefreshingToken = async (
         Authorization: `Bearer ${cachedRes?.accessToken}`,
       },
     });
-    if (!response.ok) throw null;
   }
-  let data;
-  if (!response.ok) data = { error: response.statusText };
-  else data = await response.json();
 
-  return data;
+  if (!response.ok) return null;
+  return await response.json();
 };

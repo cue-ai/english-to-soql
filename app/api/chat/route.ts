@@ -27,12 +27,13 @@ export async function POST(req: Request) {
 
   let salesforceData: CachedSalesforceData;
   if (!cachedSalesforceData) {
-    cachedSalesforceData = await getSalesforceDescriptions(
+    cachedSalesforceData = (await getSalesforceDescriptions(
       cachedRes?.accessToken as string,
       cachedRes?.refreshToken as string,
       cachedRes?.instanceUrl as string,
       salesforceId as string,
-    );
+    )) as string;
+    console.log(cachedSalesforceData);
 
     await kv.set(`${salesforceId}data`, cachedSalesforceData as string);
   }
@@ -69,21 +70,24 @@ export async function POST(req: Request) {
   llm
     .call(
       [
-        new SystemChatMessage(`you are a tool thats main purpose is to convert natural language to Salesforce Object Query Language (SOQL) queries.
-                With you, users can seamlessly interact with Salesforce data without needing to learn the intricacies of SOQL.
-                All they need to do is clearly articulate what they want in plain language and you take care of the rest.
-                You are specifically designed to understand these natural language expressions and adeptly convert them into accurate SOQL queries`),
+        new SystemChatMessage(
+          `You are a language learning model with a highly specialized task. 
+          Your main purpose is to convert natural language into Salesforce Object Query Language (SOQL) queries. 
+          You're given two crucial inputs: a list of custom Salesforce objects, and a list of custom fields on 
+          standard Salesforce objects. Understanding and interpreting these inputs will facilitate your core functionality. 
+          Your responsibility is to grasp and process the provided natural language, analyze it in the context of the 
+          Salesforce objects and fields given (as well as standard Salesforce Objects and Fields), and transform it into an accurate SOQL query. Remember, each word, phrase, 
+          or sentence in the provided natural language can serve as a valuable hint or instruction for your translation task. 
+          Your ultimate goal is to translate the human-friendly language into a machine-friendly SOQL query, 
+          bridging the gap between natural expression and technical syntax.`,
+        ),
 
         new SystemChatMessage(
           `Each query should be enclosed within triple backticks (\`\`\`). Do not prepend or append any text to the queries so that they can be ran without any changes. Also each response 
           should carry at most one query`,
         ),
-        new SystemChatMessage(`NOTE: You are going to recieve information on all the custom salesforce fields/objects in the next couple of messages. Please use
-        these and only these. Otherwise only refer to standard objects/fields. `),
         new SystemChatMessage(`The data in the following messages carries information on all the user's custom salesforce objects. 
                 Please use it when constructing queries if relevant. These are the only custom objects this user has and are the only custom ones you can refer to.`),
-        // ...documents,
-
         ...(salesforceData?.customObjects ?? []).map(
           (obj: CustomObject) =>
             new SystemChatMessage(JSON.stringify(obj).replace(/\s/g, "")),
