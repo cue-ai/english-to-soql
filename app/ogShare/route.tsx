@@ -6,7 +6,7 @@ export const runtime = "edge";
 
 export async function GET() {
   const image = await fetch(
-    new URL("../ShareOgImage.jpg", import.meta.url),
+    new URL("../opengraph-image-share.jpg", import.meta.url),
   ).then((res) => res.arrayBuffer());
 
   return new ImageResponse(

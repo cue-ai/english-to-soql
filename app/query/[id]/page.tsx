@@ -1,4 +1,4 @@
-import QueryResult from "@/app/query/[id]/QueryResult";
+import QueryResult from "./QueryResult";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
