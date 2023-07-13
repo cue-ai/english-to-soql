@@ -5,9 +5,9 @@ import { ImageResponse } from "next/server";
 export const runtime = "edge";
 
 export async function GET() {
-  const image = await fetch(new URL("./OGIMage", import.meta.url)).then((res) =>
-    res.arrayBuffer(),
-  );
+  const image = await fetch(
+    new URL("../opengraph-image.jpg", import.meta.url),
+  ).then((res) => res.arrayBuffer());
 
   return new ImageResponse(
     (
@@ -22,12 +22,9 @@ export async function GET() {
           alignItems: "center",
         }}
       >
-        <img width="256" height="256" src={"./"} />
+        {/* eslint-disable-next-line */}
+        <img style={{ width: "100%", height: "100%" }} src={image as any} />
       </div>
     ),
-    {
-      width: 1200,
-      height: 630,
-    },
   );
 }

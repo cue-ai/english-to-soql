@@ -20,6 +20,12 @@ export const metadata: Metadata = {
   icons: {
     icon: "/icon.ico",
   },
+  openGraph: {
+    title: "Salesforce SOQL Generator",
+    description:
+      "Transforming English natural language into Salesforce SOQL queries",
+    images: ["https://www.asksalesforce.ai/og"],
+  },
 };
 
 interface RootLayoutProps {
