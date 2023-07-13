@@ -14,6 +14,7 @@ import {
   CustomObject,
   SalesforceAuthCache,
 } from "@/shared/types/salesforceTypes";
+import * as process from "process";
 
 export const runtime = "edge";
 
@@ -44,7 +45,7 @@ export async function POST(req: Request) {
 
   // check count
   const count: number = (await kv.get(`${salesforceId}count`)) as number;
-  if (count >= 50) {
+  if (count >= 50 && salesforceId !== process.env.CUE_SALESFORCE_ID) {
     return new NextResponse(
       "You seem to have exceeded your free trial. Please contact christina@trycue.ai to ask me more questions.",
     );
