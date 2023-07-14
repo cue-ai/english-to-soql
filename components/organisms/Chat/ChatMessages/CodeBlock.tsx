@@ -26,6 +26,7 @@ export const CodeBlock = ({
       body: JSON.stringify({ salesforceId, query: code }),
     });
     const data = await res.json();
+    console.log(data);
     const error = data?.error;
     const result = data;
     const instanceUrl = data?.instanceUrl;

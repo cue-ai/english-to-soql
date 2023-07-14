@@ -54,9 +54,11 @@ export const getSalesforceDescriptions = async (
     });
 
   let customFields: CustomFieldsOnObject[] = fieldObjects.map((fieldObject) => {
-    const customFields = fieldObject?.fields.filter(
-      (field: SalesforceField) => field.custom,
-    );
+    const customFields = fieldObject?.fields
+      .filter((field: SalesforceField) => field.custom)
+      .map((field: SalesforceField) => {
+        return { name: field.name, type: field.type };
+      });
 
     return { fields: customFields, name: fieldObject?.name };
   });

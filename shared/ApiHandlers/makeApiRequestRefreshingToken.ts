@@ -12,6 +12,7 @@ export const makeApiRequestRefreshingToken = async (
       Authorization: `Bearer ${cachedRes?.accessToken}`,
     },
   });
+  console.log(response.statusText);
 
   if (!response.ok) {
     const newAccessToken = await refreshAccessToken(refreshToken ?? "");

@@ -33,7 +33,6 @@ export async function POST(req: Request) {
       cachedRes?.instanceUrl as string,
       salesforceId as string,
     )) as string;
-    console.log(cachedSalesforceData);
 
     await kv.set(`${salesforceId}data`, cachedSalesforceData as string);
   }

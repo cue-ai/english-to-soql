@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       },
     });
     const userData = await userRes.json();
-    const userId = userData.user_id;
+    const userId = userData.organization_id;
 
     va.track("login", { userId });
     kv.set(userId, {

@@ -10,11 +10,14 @@ export async function POST(req: Request) {
     if (!cachedRes) return NextResponse.error();
     const encodedQuery = encodeURIComponent(query);
 
-    const json = await makeApiRequestRefreshingToken(
+    let json = await makeApiRequestRefreshingToken(
       `${cachedRes.instanceUrl}/services/data/v53.0/query?q=${encodedQuery}`,
       cachedRes,
       salesforceId,
     );
+    if (!json) {
+      json = { error: "Invalid query" };
+    }
 
     return NextResponse.json({ ...json, instanceUrl: cachedRes.instanceUrl });
   } catch (err) {
