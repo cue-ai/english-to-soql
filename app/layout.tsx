@@ -2,7 +2,7 @@ import "@/app/globals.css";
 import { fontMono, fontSans } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
-import { Header } from "@/components/organisms/header";
+
 import { TailwindIndicator } from "@/components/atoms/TailwindIndicator";
 import { Metadata } from "next";
 
@@ -57,7 +57,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             style={{ backgroundImage: `url(/background.svg)` }}
             className="flex flex-col h-full min-h-screen bg-background"
           >
-            <Header />
+
             <main className="flex flex-col flex-1 ">{children}</main>
           </div>
           <TailwindIndicator />

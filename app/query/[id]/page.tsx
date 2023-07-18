@@ -14,7 +14,8 @@ export async function generateMetadata(
   const id = params.id
 
   // we want to get the data then can pass in as props
-  const res = await fetch(`/api/query/${id}`, {
+
+  const res = await fetch(`https://www.asksalesforce.ai/api/query/${id}`, {
     method: "GET",
   });
   const { code, userContent, result } = await res.json();

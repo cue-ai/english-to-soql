@@ -12,13 +12,14 @@ export const WelcomeBox:FC<WelcomeBoxProps> = ({ submitQuery }) => {
         Welcome to AskSalesforce
       </h1>
       <p className={"text-sm text-slate-400 mt-8"}>
-        This is an open source tool to help you turn any question about your
-        salesforce data into a valid SOQL query, then run it on your salesforce
-        instance and get real results.
+        This is an open source tool to help you turn any question about your Salesforce data into a valid SOQL query,
+        then run it on your Salesforce instance and get real results.
+        Generate a sharable link for any query or download results into a CSV to collaborate with your team!
       </p>
       <p className={"text-sm text-slate-400 mt-8"}>
         You can ask a question, or use one of these example ones.
       </p>
+      <p className={"text-sm text-slate-400"}> Note: Your first-ever request may take a couple of seconds.</p>
 
       <div className={"mt-6 space-y-4"}>
         <p

@@ -4,7 +4,7 @@ import React, {FC, useContext, useEffect, useState} from "react";
 import { SoqlResult } from "./SoqlResult";
 
 import { ChatContext } from "./ChatContext";
-import { AiOutlineCopy } from "react-icons/ai";
+import {AiOutlineCopy, AiOutlineLink} from "react-icons/ai";
 import { BiDownload } from "react-icons/bi";
 import { saveAs } from "file-saver";
 import Papa from "papaparse";
@@ -193,12 +193,12 @@ export const MessageComponent:FC<MessageProps>= ({ message }) => {
               className={`mr-4 pointer-events-auto flex items-center text-xs bg-slate-800 border-slate-700 border py-1 px-2 rounded-md text-white my-2 hover:bg-slate-900`}
               onClick={saveQuery}
             >
-              <AiOutlineCopy className={"h-5 mr-1"} />
+              <AiOutlineLink className={"h-5 mr-1"} />
               {savedUrl
                 ? "Saved to Clipboard"
                 : !saveLoading
-                ? "Save result"
-                : "Saving ..."}
+                ? "Share link"
+                : "Getting link ..."}
             </button>
             <button
               className={`pointer-events-auto flex items-center text-xs bg-slate-800 border-slate-700 border py-1 px-2 rounded-md text-white my-2 hover:bg-slate-900`}
