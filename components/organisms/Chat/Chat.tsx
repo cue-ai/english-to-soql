@@ -56,17 +56,10 @@ export const Chat:FC<ChatProps> = ({
 
   return (
     <div
-      className={`flex flex-col items-center  flex-grow w-full h-full pb-24
-      ${messages.length === 0 ? "justify-center" : ""}`}
+      className={`flex flex-col items-center  flex-grow w-full h-full pb-24 ${messages.length==0 && "pt-24"} `}
     >
       {messages.length === 0 && !onlyChat ? (
-        <>
           <WelcomeBox submitQuery={submitQuery} />
-
-          <p className={"text-xs text-slate-400 mt-4"}>
-            Note: Your first ever request may take a couple of seconds
-          </p>
-        </>
       ) : (
         <ChatContext.Provider value={{ append, isLoading, messages }}>
           <ChatMessages messages={messages} />
@@ -79,7 +72,7 @@ export const Chat:FC<ChatProps> = ({
       <div className=" flex flex-col items-center justify-center w-full  my-10 fixed bottom-4 pointer-events-none">
         <form
           className={
-            "pointer-events-auto items-center flex mx-auto w-7/12 max-w-2xl  space-x-2 shadow-lg p-4 bg-gray-900 rounded-md"
+            "pointer-events-auto items-center flex mx-auto  md:w-7/12 w-10/12 max-w-2xl  space-x-2 shadow-lg p-4 bg-gray-900 rounded-md"
           }
           onSubmit={handleSubmit}
         >

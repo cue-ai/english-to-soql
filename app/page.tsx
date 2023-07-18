@@ -15,7 +15,7 @@ export default function Home() {
   return (
       <SalesforceContext.Provider value={{ salesforceId, setSalesforceInfo, refreshToken  }}>
         <Header/>
-    <div className="flex min-h-screen flex-col items-center justify-between px-24">
+    <div className="flex min-h-screen flex-col items-center justify-between px-2 md:px-24">
       <div
         className={`z-10 w-full h-full  min-h-screen flex-grow items-center justify-between lg:flex lg:flex-col  ${
           !salesforceId && "pt-24"

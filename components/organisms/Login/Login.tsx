@@ -13,13 +13,13 @@ export const Login:FC<LoginProps>= ({  onlyLoginBox }) => {
     <div className={"w-full h-full text-center"}>
       {!onlyLoginBox && (
         <>
-          <h1 className="text-7xl font-semibold  bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/20">
+          <h1 className="lg:text-7xl md:text-5xl sm: text-3xl font-semibold  bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/20">
             AskSalesforce.ai
           </h1>
 
           <p
             className={
-              "font-medium  mx-auto mt-8 w-8/12 bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/50"
+              "lg:text-lg md:text-sm  font-medium  mx-auto mt-8 w-8/12 bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/50"
             }
           >
             Supercharge your team’s productivity with our free English to SOQL
