@@ -17,12 +17,16 @@ export const Header = () => {
         <img src="/salesforceLogo.svg" alt="Logo" className={"mr-2"} />
         <h1>AskSalesforce</h1>
       </div>
-        {salesforceId &&<button
+        <div >{salesforceId &&<button
             className="text-sm border border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-bold py-1 px-4 rounded"
             onClick={() => setSalesforceInfo({refreshToken: "", salesforceId: ""})}
         >
             Logout
         </button>}
+            <a className={"text-xs pl-2 text-gray-500 hover:text-gray-700 hidden md:inline-block"}
+                href={"https://www.notion.so/cue-ai/AskSalesforce-Terms-and-Services-66e0503f953a42df90735f6aee082e97?pvs=4"}>Terms and services</a>
+        </div>
+
     </div>
   </header>
 );}
