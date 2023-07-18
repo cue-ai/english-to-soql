@@ -1,6 +1,6 @@
 import { Message } from "ai";
 import { CodeBlock } from "./CodeBlock";
-import React, { useContext, useEffect, useState } from "react";
+import React, {FC, useContext, useEffect, useState} from "react";
 import { SoqlResult } from "./SoqlResult";
 
 import { ChatContext } from "./ChatContext";
@@ -10,6 +10,7 @@ import { saveAs } from "file-saver";
 import Papa from "papaparse";
 import va from "@vercel/analytics";
 import { SalesforceQueryResultWithError } from "@/shared/types/salesforceTypes";
+import {SalesforceContext} from "@/components/organisms/Contexts/SalesforceContext";
 
 type MessageProps = {
   message: Message;
@@ -35,7 +36,8 @@ const cleanCode = (part: string) => {
   return code;
 };
 
-export const MessageComponent = ({ message }: MessageProps) => {
+export const MessageComponent:FC<MessageProps>= ({ message }) => {
+  // Break the message into code blocks and non code blocks where code blocks start and end with ```
   const parts = message?.content.split(/(```[\s\S]*?```)/gm);
   const [queryResult, setQueryResult] =
     useState<SalesforceQueryResultWithError>(
@@ -46,6 +48,7 @@ export const MessageComponent = ({ message }: MessageProps) => {
   const [saveLoading, setSaveLoading] = useState(false);
   const [savedUrl, setSavedUrl] = useState(false);
   const [downloadedUrl, setDownloadedUrl] = useState(false);
+  const {salesforceId}=useContext(SalesforceContext)
 
   // USE EFFECTS TO MANAGE LOAD/DOWNLOAD STATE
   useEffect(() => {
@@ -72,7 +75,7 @@ export const MessageComponent = ({ message }: MessageProps) => {
 
   const saveQuery = async () => {
     setSaveLoading(true);
-    // we need to store query result/ last user message/ current code
+    // we need to store getQueryData result/ last user message/ current code
 
     let code = parts?.find(
       (part) => part.startsWith("```") && part.endsWith("```"),
@@ -96,10 +99,12 @@ export const MessageComponent = ({ message }: MessageProps) => {
         code,
         userContent: userMessage?.content ?? "",
         result: queryResult?.result,
+        salesforceId
       }),
     });
 
     const { queryId } = await res.json();
+    console.log(queryId)
     va.track("queryShard", { queryId });
 
     await navigator.clipboard.writeText(
@@ -119,7 +124,7 @@ export const MessageComponent = ({ message }: MessageProps) => {
     });
     const csv = Papa.unparse(downloadRecords);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    saveAs(blob, "query.csv");
+    saveAs(blob, "Query.csv");
     setDownloadedUrl(true);
   };
   return (
@@ -178,7 +183,7 @@ export const MessageComponent = ({ message }: MessageProps) => {
               {savedUrl
                 ? "Saved to Clipboard"
                 : !saveLoading
-                ? "Save query"
+                ? "Save result"
                 : "Saving ..."}
             </button>
             <button
@@ -186,7 +191,7 @@ export const MessageComponent = ({ message }: MessageProps) => {
               onClick={downloadQuery}
             >
               <BiDownload className={"h-5 mr-1"} />
-              {downloadedUrl ? "Downloaded" : "Download query result"}
+              {downloadedUrl ? "Downloaded" : "Download result"}
             </button>
           </div>
         )}

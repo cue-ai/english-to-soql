@@ -9,6 +9,7 @@ export const getCachedQuery=async(id:string)=>{
 
 export const setCachedQuery=async(salesforceId:string, queryResult:CachedQueryResult)=>{
     const queryId = uuidv4();
-    await kv.set(`${salesforceId}+${queryId}`,queryResult);
-    return `${salesforceId}+${queryId}`
+    const newId=`${salesforceId}-${queryId}`
+    await kv.set(`${ newId}`,queryResult);
+    return newId
 }

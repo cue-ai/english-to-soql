@@ -22,7 +22,6 @@ export type CustomObject = {
 
 export type SalesforceAuthCache = {
   accessToken: string;
-  refreshToken: string;
   instanceUrl: string;
 };
 
@@ -36,6 +35,11 @@ export type CachedQueryResult = {
   userContent: string;
   result: SalesforceQueryResult;
 };
+
+export type SalesforceInfo={
+  salesforceId:string;
+  refreshToken:string
+}
 
 export type SalesforceQueryResultWithError = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

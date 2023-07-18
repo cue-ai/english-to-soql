@@ -1,5 +1,6 @@
 import { isObject } from "radash";
 import { SalesforceQueryResult } from "@/shared/types/salesforceTypes";
+import {FC} from "react";
 
 type ResultTableProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -8,11 +9,11 @@ type ResultTableProps = {
   instanceUrl?: string;
 };
 
-export const SoqlResult = ({
+export const SoqlResult:FC<ResultTableProps> = ({
   error,
   result,
   instanceUrl,
-}: ResultTableProps) => {
+}) => {
   if (error) {
     return (
       <h1 className={"font-semibold text-red-500 font-mono"}>
@@ -21,8 +22,7 @@ export const SoqlResult = ({
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const records: any[] = result?.records;
+  const records = result?.records;
   const totalSize = result?.totalSize;
   const keys = Object.keys(records?.[0] ?? {}).filter(
     (key) => !isObject(records[0][key]),
@@ -49,7 +49,7 @@ export const SoqlResult = ({
       <tbody>
         {records?.map((item, index) => (
           <tr
-            key={index}
+            key={item?.Id?? index}
             className={"bg-slate-900 text-start cursor-pointer"}
             onClick={() => {
               if (!instanceUrl) return;

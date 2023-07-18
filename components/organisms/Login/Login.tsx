@@ -1,20 +1,16 @@
-import { useEffect } from "react";
+import {FC, useContext, useEffect} from "react";
 
 import * as process from "process";
+import {cn} from "@/lib/utils";
+import {SalesforceContext} from "@/components/organisms/Contexts/SalesforceContext";
 
 export type LoginProps = {
-  setSalesforceId: (arg: string) => void;
   setIsFirst: (arg: boolean) => void;
   onlyLoginBox?: boolean;
 };
 
-export const Login = ({ setSalesforceId, onlyLoginBox }: LoginProps) => {
-  useEffect(() => {
-    const tempSalesforceId = localStorage.getItem("salesforceId");
-    if (tempSalesforceId) {
-      setSalesforceId?.(tempSalesforceId);
-    }
-  }, []);
+export const Login:FC<LoginProps>= ({  onlyLoginBox }) => {
+  const {setSalesforceId}=useContext(SalesforceContext)
 
   return (
     <div className={"w-full h-full text-center"}>
@@ -37,21 +33,18 @@ export const Login = ({ setSalesforceId, onlyLoginBox }: LoginProps) => {
       )}
 
       <div
-        className={`${
-          !onlyLoginBox && "mt-8"
-        } mx-auto w-7/12 border-2 rounded-md border-blue-900 py-16 bg-gray-900`}
+        className={cn(!onlyLoginBox && "mt-8","mx-auto w-7/12 border-2 rounded-md border-blue-900 py-16 bg-gray-900")}
       >
         <h1 className={"text-gray-300"}>Login to generate SOQL </h1>
-        <button
+        <a
           className={
             "mt-3 text-sm inline-block bg-[#1F264B] hover:bg-[#1C2244] text-white font-bold py-1.5 px-3 rounded cursor-pointer"
           }
-          onClick={() => {
-            window.location.href = `https://login.salesforce.com/services/oauth2/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_SALESFORCE_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_SALESFORCE_REDIRECT_URI}`;
-          }}
+        href ={`https://login.salesforce.com/services/oauth2/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_SALESFORCE_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_SALESFORCE_REDIRECT_URI}`}
+
         >
           {"Connect your Salesforce"}
-        </button>
+        </a>
       </div>
     </div>
   );

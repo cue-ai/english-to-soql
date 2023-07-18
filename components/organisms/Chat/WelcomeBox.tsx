@@ -1,10 +1,12 @@
+import {FC} from "react";
+
 type WelcomeBoxProps = {
   submitQuery: (arg: string) => void;
 };
-export const WelcomeBox = ({ submitQuery }: WelcomeBoxProps) => {
+export const WelcomeBox:FC<WelcomeBoxProps> = ({ submitQuery }) => {
   return (
     <div
-      className={"border-2 rounded-md border-blue-900 p-8 bg-gray-900 w-6/12"}
+      className={"mb-10 border-2 rounded-md border-blue-900 p-8 bg-gray-900 w-6/12"}
     >
       <h1 className={"text-white text-xl font-semibold"}>
         Welcome to AskSalesforce
