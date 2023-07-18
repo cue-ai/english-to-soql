@@ -4,7 +4,7 @@ import React, {FC, useContext, useEffect, useState} from "react";
 import { SoqlResult } from "./SoqlResult";
 
 import { ChatContext } from "./ChatContext";
-import {AiOutlineCopy, AiOutlineLink} from "react-icons/ai";
+import { AiOutlineLink} from "react-icons/ai";
 import { BiDownload } from "react-icons/bi";
 import { saveAs } from "file-saver";
 import Papa from "papaparse";
