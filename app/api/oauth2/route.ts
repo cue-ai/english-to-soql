@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import { kv } from "@vercel/kv";
+
 import va from "@vercel/analytics";
+import {setCachedAuthData} from "@/shared/kv/cachedAuthData";
+import {initCachedCount} from "@/shared/kv/cachedCount";
 
 export async function POST(req: Request) {
   const { code } = await req.json();
@@ -39,14 +41,15 @@ export async function POST(req: Request) {
     const userId = userData.organization_id;
 
     va.track("login", { userId });
-    kv.set(userId, {
+
+    await setCachedAuthData(refreshToken, {
       accessToken,
       instanceUrl,
-      refreshToken: refreshToken,
-    });
-    kv.set(`${userId}count`, 0);
+    })
 
-    return NextResponse.json({ salesforceId: userId });
+    await initCachedCount(userId)
+
+    return NextResponse.json({ salesforceId: userId, refreshToken  });
   } catch (err) {
     console.log(err);
     return NextResponse.error();

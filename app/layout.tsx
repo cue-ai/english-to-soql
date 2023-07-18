@@ -9,14 +9,11 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: {
     default: "Salesforce SOQL Generator",
-    template: `SOQL Converter`,
+    template: `%s - SOQL Converter`,
   },
   description:
-    '"Experience the power of AI with our GPT-driven tool, adeptly transforming English natural language into Salesforce SOQL queries. ' +
-    "Streamline your data management process, minimize coding efforts, and maximize productivity. " +
-    "Ideal for beginners and seasoned Salesforce users alike, our tool offers unparalleled ease-of-use and accuracy in generating " +
-    "SOQL queries. " +
-    'Revolutionize your Salesforce experience today, boost efficiency, and unlock deeper insights from your data."',
+    `This is a Salesforce SOQL assistant that takes in natural language and constructs and runs SOQL commands for you. 
+    This allows anyone who doesn't have a thorough understanding of SOQL to make any queries they want`,
   icons: {
     icon: "/icon.ico",
   },
@@ -42,7 +39,7 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>{/*<link rel="icon" href="icon.ico" />*/}</head>
+      <head/>
       <body
         className={cn(
           "font-sans antialiased",
@@ -56,7 +53,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             className="flex flex-col h-full min-h-screen bg-background"
           >
             <Header />
-            <main className="flex flex-col flex-1">{children}</main>
+            <main className="flex flex-col flex-1 ">{children}</main>
           </div>
           <TailwindIndicator />
         </ThemeProvider>

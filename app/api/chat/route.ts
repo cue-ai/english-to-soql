@@ -5,7 +5,6 @@ import {
   HumanChatMessage,
   SystemChatMessage,
 } from "langchain/schema";
-import { kv } from "@vercel/kv";
 import { getSalesforceDescriptions } from "./getSalesforceDescriptions";
 import { NextResponse } from "next/server";
 import {
@@ -15,26 +14,31 @@ import {
   SalesforceAuthCache,
 } from "@/shared/types/salesforceTypes";
 import * as process from "process";
+import {parseJsonString} from "./parseJsonString";
+import {getCachedAuthData} from "@/shared/kv/cachedAuthData";
+import {getCachedSalesforceData,setCachedSalesforceData} from "@/shared/kv/cachedSalesforceData";
+import {getCachedCount, incrementCachedCount} from "@/shared/kv/cachedCount";
 
 export const runtime = "edge";
 
+const MAX_COUNT=50;
 export async function POST(req: Request) {
-  const { messages, salesforceId } = await req.json();
-  const cachedRes: SalesforceAuthCache | null = await kv.get(salesforceId);
+
+  const { messages, salesforceId,refreshToken } = await req.json();
+  const cachedRes: SalesforceAuthCache | null = await getCachedAuthData(refreshToken);
   if (!cachedRes) throw Error("No salesforce token");
 
-  let cachedSalesforceData = (await kv.get(`${salesforceId}data`)) as string;
+  let cachedSalesforceData = await getCachedSalesforceData(refreshToken) as string;
 
-  let salesforceData: CachedSalesforceData;
+
   if (!cachedSalesforceData) {
     cachedSalesforceData = (await getSalesforceDescriptions(
       cachedRes?.accessToken as string,
-      cachedRes?.refreshToken as string,
+      refreshToken as string,
       cachedRes?.instanceUrl as string,
       salesforceId as string,
     )) as string;
-
-    await kv.set(`${salesforceId}data`, cachedSalesforceData as string);
+    await setCachedSalesforceData(refreshToken,cachedSalesforceData as string)
   }
 
   if (!cachedSalesforceData) {
@@ -44,14 +48,14 @@ export async function POST(req: Request) {
   const { stream, handlers } = LangChainStream();
 
   // check count
-  const count: number = (await kv.get(`${salesforceId}count`)) as number;
-  if (count >= 50 && salesforceId !== process.env.CUE_SALESFORCE_ID) {
+  const count = await getCachedCount(salesforceId);
+  if (count >= MAX_COUNT && salesforceId !== process.env.CUE_SALESFORCE_ID) {
     return new NextResponse(
       "You seem to have exceeded your free trial. Please contact christina@trycue.ai to ask me more questions.",
     );
   }
   if (typeof count === "undefined") throw Error("No count for some reason");
-  await kv.set(`${salesforceId}count`, (count as number) + 1);
+  await incrementCachedCount(salesforceId);
 
   const llm = new ChatOpenAI({
     modelName: "gpt-4",
@@ -59,12 +63,9 @@ export async function POST(req: Request) {
     streaming: true,
   });
 
-  // Needed because sometimes kv returns it as string, and sometimes as json
-  try {
-    salesforceData = JSON.parse(cachedSalesforceData);
-  } catch (err) {
-    salesforceData = cachedSalesforceData as unknown as CachedSalesforceData;
-  }
+
+    const salesforceData:CachedSalesforceData=parseJsonString(cachedSalesforceData)
+    
 
   llm
     .call(

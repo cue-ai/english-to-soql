@@ -1,15 +1,15 @@
-import { NextResponse } from "next/server";
-import { kv } from "@vercel/kv";
-import { v4 as uuidv4 } from "uuid";
+import {setCachedQuery} from "@/shared/kv/cachedQuery";
+import {NextResponse} from "next/server";
+
 export async function POST(req: Request) {
-  try {
-    const { code, userContent, result } = await req.json();
+    try {
+        const { code, userContent, result,salesforceId } = await req.json();
 
-    const queryId = uuidv4();
-    await kv.set(queryId, { code, userContent, result });
+        const queryId = await setCachedQuery(salesforceId,{ code, userContent, result } )
 
-    return NextResponse.json({ queryId });
-  } catch (err) {
-    return new NextResponse("Server Error", { status: 520 });
-  }
+        return NextResponse.json({ queryId });
+    } catch (err) {
+        return new NextResponse("Server Error", { status: 520 });
+    }
 }
+

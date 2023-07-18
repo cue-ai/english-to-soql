@@ -14,9 +14,9 @@ export default function Page() {
         body: JSON.stringify({ code }),
       });
       const data = await res.json();
-      if (data.salesforceId) {
-        localStorage.setItem("salesforceId", data.salesforceId);
-      }
+
+      if (data.salesforceId && data.refreshToken) {
+        localStorage.setItem("salesforceInfo",JSON.stringify(data))}
       router.push("/");
     } catch (err) {
       router.push("/");

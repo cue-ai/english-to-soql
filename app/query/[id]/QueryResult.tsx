@@ -1,40 +1,13 @@
-"use client";
+"use client"
 import { useEffect, useState } from "react";
 import { Login } from "@/components/organisms/Login/Login";
 import { Chat } from "@/components/organisms/Chat/Chat";
 import { SoqlResult } from "@/components/organisms/Chat/ChatMessages/SoqlResult";
 import va from "@vercel/analytics";
 import { SalesforceQueryResult } from "@/shared/types/salesforceTypes";
-import { Metadata } from "next";
+import {useGetSalesforceInfo} from "@/shared/hooks/useGetSalesforceInfo";
+import {SalesforceContext} from "@/components/organisms/Contexts/SalesforceContext";
 
-export const metadata: Metadata = {
-  title: {
-    default: "Salesforce SOQL Generator",
-    template: `SOQL Converter`,
-  },
-  description:
-    '"Experience the power of AI with our GPT-driven tool, adeptly transforming English natural language into Salesforce SOQL queries. ' +
-    "Streamline your data management process, minimize coding efforts, and maximize productivity. " +
-    "Ideal for beginners and seasoned Salesforce users alike, our tool offers unparalleled ease-of-use and accuracy in generating " +
-    "SOQL queries. " +
-    'Revolutionize your Salesforce experience today, boost efficiency, and unlock deeper insights from your data."',
-  icons: {
-    icon: "/icon.ico",
-  },
-  openGraph: {
-    title: "Salesforce SOQL Generator",
-    description:
-      "Transforming English natural language into Salesforce SOQL queries",
-    images: ["https://www.asksalesforce.ai/ogShare"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Salesforce SOQL Generator",
-    description:
-      '"Transforming English natural language into Salesforce SOQL queries',
-    images: ["https://www.asksalesforce.ai/ogShare"],
-  },
-};
 
 export type QueryData = {
   code: string;
@@ -43,13 +16,14 @@ export type QueryData = {
 };
 
 export default function QueryResult({ id }: { id: string }) {
-  const [salesforceId, setSalesforceId] = useState(
-    localStorage.getItem("salesforceId"),
-  );
+  const {salesforceInfo, setSalesforceInfo} = useGetSalesforceInfo()
+  const {refreshToken,salesforceId}=salesforceInfo;
+
   const [isFirst, setIsFirst] = useState(false);
   const [queryData, setQueryData] = useState<QueryData | undefined>(undefined);
   const getQueryData = async () => {
-    const res = await fetch(`/api/getQueryData?queryId=${id}`, {
+    console.log(id)
+    const res = await fetch(`/api/query/${id}`, {
       method: "GET",
     });
     const { code, userContent, result } = await res.json();
@@ -64,6 +38,7 @@ export default function QueryResult({ id }: { id: string }) {
   }, [id]);
 
   return (
+      <SalesforceContext.Provider value={{ salesforceId, setSalesforceInfo,refreshToken }}>
     <div className="flex min-h-screen flex-col items-center justify-between px-24  ">
       <div
         className={`z-10 w-full h-full min-h-screen flex-grow items-center lg:flex lg:flex-col ${"pt-24"} `}
@@ -92,15 +67,12 @@ export default function QueryResult({ id }: { id: string }) {
         {!salesforceId ? (
           <div className={"my-8 w-full"}>
             <Login
-              setSalesforceId={setSalesforceId}
               onlyLoginBox={true}
               setIsFirst={setIsFirst}
             />
           </div>
         ) : (
           <Chat
-            salesforceId={salesforceId}
-            setSalesforceId={setSalesforceId}
             onlyChat={true}
             isFirst={isFirst}
             setIsFirst={setIsFirst}
@@ -108,5 +80,6 @@ export default function QueryResult({ id }: { id: string }) {
         )}
       </div>
     </div>
+      </SalesforceContext.Provider>
   );
 }

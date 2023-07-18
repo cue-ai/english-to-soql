@@ -19,8 +19,9 @@ export const getSalesforceDescriptions = async (
   const data: SalesforceQueryResult | null =
     await makeApiRequestRefreshingToken(
       `${instanceUrl}/services/data/v53.0/query?q=${encodedQuery}`,
-      { accessToken, refreshToken, instanceUrl },
+      { accessToken, instanceUrl },
       salesforceId,
+        refreshToken
     );
 
   if (!data) return null;
@@ -33,11 +34,12 @@ export const getSalesforceDescriptions = async (
       try {
         return await makeApiRequestRefreshingToken(
           `${instanceUrl}/services/data/v53.0/sobjects/${objectName}/describe`,
-          { accessToken, refreshToken, instanceUrl },
+          { accessToken, instanceUrl },
           salesforceId,
+            refreshToken
         );
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }),
   );
