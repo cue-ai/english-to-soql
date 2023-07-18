@@ -7,6 +7,7 @@ import va from "@vercel/analytics";
 import { SalesforceQueryResult } from "@/shared/types/salesforceTypes";
 import {useGetSalesforceInfo} from "@/shared/hooks/useGetSalesforceInfo";
 import {SalesforceContext} from "@/components/organisms/Contexts/SalesforceContext";
+import {Header} from "@/components/organisms/header";
 
 
 export type QueryData = {
@@ -39,6 +40,7 @@ export default function QueryResult({ id }: { id: string }) {
 
   return (
       <SalesforceContext.Provider value={{ salesforceId, setSalesforceInfo,refreshToken }}>
+        <Header/>
     <div className="flex min-h-screen flex-col items-center justify-between px-24  ">
       <div
         className={`z-10 w-full h-full min-h-screen flex-grow items-center lg:flex lg:flex-col ${"pt-24"} `}
