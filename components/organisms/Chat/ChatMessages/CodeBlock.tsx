@@ -18,33 +18,39 @@ export const CodeBlock:FC<CodeBlockProps> = ({
   queryResult,
 }) => {
   const [isLoadingQuery, setIsLoadingQuery] = useState(false);
-  const {salesforceId, refreshToken}=useContext(SalesforceContext)
+  const {setSalesforceInfo,salesforceId, refreshToken}=useContext(SalesforceContext)
   const { append, isLoading } = useContext(ChatContext);
 
   const runQuery = async () => {
-    setIsLoadingQuery(true);
-    const res = await fetch("/api/query", {
-      method: "POST",
-      body: JSON.stringify({ salesforceId, query: code, refreshToken }),
-    });
-    const data = await res.json();
-    const error = data?.error;
-    const result = data;
-    const instanceUrl = data?.instanceUrl;
-    const isRanBefore: boolean = Object.keys(queryResult ?? {}).length !== 0;
-    setQueryResult({ error, result, instanceUrl });
-    setIsLoadingQuery(false);
-    if (error && !isRanBefore) {
-      const newId = uuidv4();
-      await append({
-        id: `redo${newId}`,
-        createdAt: new Date(),
-        content:
-          "That last getQueryData didnt seem to work. PLease use a different strategy to give me a getQueryData that works. Note, if you are using " +
-          "custom fields/objects that haven't been mentioned in prior messages, please try something new. (use only standard objects/fields plus the custom objects/fields" +
-          " inputted in prior messages)",
-        role: "user",
+    try{
+      setIsLoadingQuery(true);
+      const res = await fetch("/api/query", {
+        method: "POST",
+        body: JSON.stringify({ salesforceId, query: code, refreshToken }),
       });
+      const data = await res.json();
+      const error = data?.error;
+      const result = data;
+      const instanceUrl = data?.instanceUrl;
+      const isRanBefore: boolean = Object.keys(queryResult ?? {}).length !== 0;
+      setQueryResult({ error, result, instanceUrl });
+      setIsLoadingQuery(false);
+      if (error && !isRanBefore) {
+        const newId = uuidv4();
+        await append({
+          id: `redo${newId}`,
+          createdAt: new Date(),
+          content:
+              "That last getQueryData didnt seem to work. PLease use a different strategy to give me a getQueryData that works. Note, if you are using " +
+              "custom fields/objects that haven't been mentioned in prior messages, please try something new. (use only standard objects/fields plus the custom objects/fields" +
+              " inputted in prior messages)",
+          role: "user",
+        });
+      }
+    }
+    catch(err){
+    //   sign user out
+      setSalesforceInfo({refreshToken:"", salesforceId:""})
     }
   };
 
