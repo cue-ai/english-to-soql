@@ -1,8 +1,7 @@
-import {FC, useContext, useEffect} from "react";
+import {FC} from "react";
 
 import * as process from "process";
 import {cn} from "@/lib/utils";
-import {SalesforceContext} from "@/components/organisms/Contexts/SalesforceContext";
 
 export type LoginProps = {
   setIsFirst: (arg: boolean) => void;
@@ -10,8 +9,6 @@ export type LoginProps = {
 };
 
 export const Login:FC<LoginProps>= ({  onlyLoginBox }) => {
-  const {setSalesforceId}=useContext(SalesforceContext)
-
   return (
     <div className={"w-full h-full text-center"}>
       {!onlyLoginBox && (

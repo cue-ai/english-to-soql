@@ -9,15 +9,15 @@ export const useGetSalesforceInfo = () => {
     });
 
     useEffect(() => {
-        const tempSalesforceInfo = localStorage.getItem("salesforceInfo");
+        const tempSalesforceInfo = localStorage?.getItem("salesforceInfo");
         if (tempSalesforceInfo) {
             setSalesforceInfoLocal?.(JSON.parse(tempSalesforceInfo));
         }
-    }, [localStorage.getItem("salesforceInfo")]);
+    }, []);
 
 
     const setSalesforceInfo = (value:SalesforceInfo) => {
-        localStorage.setItem("salesforceInfo",JSON.stringify(value))
+        localStorage?.setItem("salesforceInfo",JSON.stringify(value))
         setSalesforceInfoLocal(value)
     };
 
