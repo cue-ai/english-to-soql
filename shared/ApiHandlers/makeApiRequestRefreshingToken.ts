@@ -1,5 +1,4 @@
 import { refreshAccessToken } from "./refreshAccessToken";
-import { kv } from "@vercel/kv";
 import { SalesforceAuthCache } from "@/shared/types/salesforceTypes";
 import {setCachedAuthData} from "@/shared/kv/cachedAuthData";
 export const makeApiRequestRefreshingToken = async (

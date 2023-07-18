@@ -38,7 +38,22 @@ const cleanCode = (part: string) => {
 
 export const MessageComponent:FC<MessageProps>= ({ message }) => {
   // Break the message into code blocks and non code blocks where code blocks start and end with ```
-  const parts = message?.content.split(/(```[\s\S]*?```)/gm);
+  let parts = message?.content.split(/(```[\s\S]*?```)/gm);
+  let counter=0
+  parts = parts.map((str) => {
+    const match = str.match(/(```[\s\S]*?```)/gm);
+    if (match) {
+      counter++;
+      if (counter === 1) {
+        return str;
+      } else {
+        return str.replace(/```/g, '');
+      }
+    } else {
+      return str;
+    }
+  });
+
   const [queryResult, setQueryResult] =
     useState<SalesforceQueryResultWithError>(
       {} as SalesforceQueryResultWithError,
@@ -104,7 +119,6 @@ export const MessageComponent:FC<MessageProps>= ({ message }) => {
     });
 
     const { queryId } = await res.json();
-    console.log(queryId)
     va.track("queryShard", { queryId });
 
     await navigator.clipboard.writeText(

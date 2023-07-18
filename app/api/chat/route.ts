@@ -83,7 +83,7 @@ export async function POST(req: Request) {
         ),
 
         new SystemChatMessage(
-          `Each query should be enclosed within triple backticks (\`\`\`). Do not prepend or append any text to the queries so that they can be ran without any changes. Also each response 
+          `Each query should be enclosed within triple backticks (\`\`\`). Do not prepend or append any text to the queries so that they can be ran without any changes. Also it is of the utmost importance that each response 
           should carry at most one query`,
         ),
         new SystemChatMessage(`The data in the following messages carries information on all the user's custom salesforce objects. 
