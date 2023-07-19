@@ -2,9 +2,16 @@ import { createContext } from "react";
 import {SalesforceInfo} from "@/shared/types/salesforceTypes";
 
 
+export type SalesforceContextType={
+    salesforceId:string;
+    refreshToken:string,
+    setSalesforceInfo:(arg:SalesforceInfo)=>void
+}
 
-export const SalesforceContext = createContext({
+const defaultValue: SalesforceContextType = {
     salesforceId:"",
     refreshToken:"",
-    setSalesforceInfo:(arg:SalesforceInfo)=>{console.log("setting id",arg)}
-});
+    setSalesforceInfo:()=>{}
+};
+
+export const SalesforceContext = createContext<SalesforceContextType>(defaultValue);

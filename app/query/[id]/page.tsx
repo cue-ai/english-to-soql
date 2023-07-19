@@ -1,5 +1,7 @@
 import QueryResult from "./QueryResult";
 import { Metadata } from "next";
+import {CachedQueryResult} from "@/shared/types/salesforceTypes";
+import {getCachedQuery} from "@/shared/kv/cachedQuery";
 
 
 type MetaProps = {
@@ -15,10 +17,9 @@ export async function generateMetadata(
 
   // we want to get the data then can pass in as props
 
-  const res = await fetch(`https://www.asksalesforce.ai/api/query/${id}`, {
-    method: "GET",
-  });
-  const { code, userContent, result } = await res.json();
+  const res  = await getCachedQuery(id as string ??"") as CachedQueryResult
+
+  const { code, userContent, result } = res;
 
   return {
     openGraph: {

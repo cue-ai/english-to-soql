@@ -31,6 +31,10 @@ export default function Home() {
         )}
       </div>
     </div>
+        <div className={"w-screen text-center py-2"}>
+          <a className={"text-xs pl-2 text-gray-500 hover:text-gray-700 hidden md:inline-block"}
+              href={"https://www.notion.so/cue-ai/AskSalesforce-Terms-and-Services-66e0503f953a42df90735f6aee082e97?pvs=4"}>Terms and services</a>
+        </div>
       </SalesforceContext.Provider>
   );
 }

@@ -1,18 +1,17 @@
-import {NextRequest, NextResponse} from "next/server";
+import { NextResponse} from "next/server";
 import { CachedQueryResult } from "@/shared/types/salesforceTypes";
 import {getCachedQuery} from "@/shared/kv/cachedQuery";
+import {NextApiRequest} from "next";
 
-export async function GET(req: NextRequest) {
-    const pathnameSegments = req.nextUrl.pathname.split('/');
-    const id = pathnameSegments[pathnameSegments.length - 1];
+export const runtime = "edge";
+
+export async function GET(req: NextApiRequest, {params}:{params:{id:string}}) {
+    const {id} = params
     const res: CachedQueryResult | null = await getCachedQuery(id as string ??"");
 
     if (!res) {
         return new NextResponse("Server Error", { status: 520 });
     }
-    const code = res?.code;
-    const userContent = res?.userContent;
-    const result = res?.result;
 
-    return NextResponse.json({ code, userContent, result });
+    return NextResponse.json({ ...res });
 }

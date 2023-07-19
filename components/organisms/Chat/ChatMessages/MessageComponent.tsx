@@ -11,6 +11,7 @@ import Papa from "papaparse";
 import va from "@vercel/analytics";
 import { SalesforceQueryResultWithError } from "@/shared/types/salesforceTypes";
 import {SalesforceContext} from "@/components/organisms/Contexts/SalesforceContext";
+import {UseChangeButtonState} from "@/shared/hooks/useChangeButtonState";
 
 type MessageProps = {
   message: Message;
@@ -61,21 +62,13 @@ export const MessageComponent:FC<MessageProps>= ({ message }) => {
   const { messages } = useContext(ChatContext);
 
   const [saveLoading, setSaveLoading] = useState(false);
-  const [savedUrl, setSavedUrl] = useState(false);
-  const [downloadedUrl, setDownloadedUrl] = useState(false);
+
+  const {alteredState:savedUrl, setAlteredSate:setSavedUrl}=UseChangeButtonState()
+  const {alteredState:downloadedUrl, setAlteredSate:setDownloadedUrl}=UseChangeButtonState()
+
+  // const [savedUrl, setSavedUrl] = useState(false);
   const {salesforceId}=useContext(SalesforceContext)
 
-  // USE EFFECTS TO MANAGE LOAD/DOWNLOAD STATE
-  useEffect(() => {
-    if (!savedUrl) return;
-    const timer = setTimeout(() => {
-      setSavedUrl(false);
-    }, 4000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [savedUrl]);
 
   useEffect(() => {
     if (!downloadedUrl) return;

@@ -1,10 +1,16 @@
 import { createContext } from "react";
 import { Message } from "ai";
 
-export const ChatContext = createContext({
-  append: (arg: Message) => {
-    console.log("Called append with", arg);
-  },
+export type ChatContextType={
+  append:(arg:Message)=>void,
+  isLoading:boolean,
+  messages:Message[]
+}
+
+const defaultValue: ChatContextType = {
+  append: () => {},
   isLoading: false,
-  messages: [{} as Message],
-});
+  messages: [],
+};
+
+export const ChatContext = createContext<ChatContextType>(defaultValue);

@@ -2,7 +2,7 @@ import "@/app/globals.css";
 import { fontMono, fontSans } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
-
+import Script from 'next/script'
 import { TailwindIndicator } from "@/components/atoms/TailwindIndicator";
 import { Metadata } from "next";
 
@@ -11,12 +11,12 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   return {
     title: {
-      default: "Salesforce SOQL Generator",
-      template: `%s - SOQL Converter`,
+      default: "AskSalesforce.ai",
+      template: `%s - SOQL Generator`,
     },
     description:
-        `This is a Salesforce SOQL assistant that takes in natural language and constructs and runs SOQL commands for you. 
-    This allows anyone who doesn't have a thorough understanding of SOQL to make any queries they want`,
+        `Supercharge your team’s productivity with our free English to SOQL tool that makes Salesforce querying a breeze. 
+        Say hello to seamless data management and lightning-fast insights.`,
     icons: {
       icon: "/icon.ico",
     },
@@ -44,7 +44,17 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head/>
+    <head>
+      {process.env.NODE_ENV === "production" && <Script id="show-banner">
+        {
+          `(function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+          })(window, document, "clarity", "script", "i1ftyjvyb0");`
+        }
+      </Script>}
+    </head>
       <body
         className={cn(
           "font-sans antialiased",

@@ -23,7 +23,6 @@ export default function QueryResult({ id }: { id: string }) {
   const [isFirst, setIsFirst] = useState(false);
   const [queryData, setQueryData] = useState<QueryData | undefined>(undefined);
   const getQueryData = async () => {
-    console.log(id)
     const res = await fetch(`/api/query/${id}`, {
       method: "GET",
     });

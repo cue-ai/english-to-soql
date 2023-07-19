@@ -3,7 +3,7 @@ import {FC, useContext, useEffect, useState} from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ChatContext } from "./ChatContext";
 import { SalesforceQueryResultWithError } from "@/shared/types/salesforceTypes";
-import {QueryLoading} from "@/components/atoms/loading/QueryLoading";
+import {Loading} from "@/components/atoms/loading/Loading";
 import {SalesforceContext} from "@/components/organisms/Contexts/SalesforceContext";
 
 type CodeBlockProps = {
@@ -75,7 +75,7 @@ export const CodeBlock:FC<CodeBlockProps> = ({
           onClick={runQuery}
         >
           {isLoadingQuery && (
-            <QueryLoading/>
+            <Loading className={"w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-black"}/>
           )}
           {isLoadingQuery ? "Running" : "Run"}
         </Button>

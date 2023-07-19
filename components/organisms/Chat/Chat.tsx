@@ -7,7 +7,7 @@ import React, {FC, useContext} from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ChatContext } from "./ChatMessages/ChatContext";
 import va from "@vercel/analytics";
-import {ChatLoading} from "@/components/atoms/loading/ChatLoading";
+import {Loading} from "@/components/atoms/loading/Loading";
 import {SalesforceContext} from "@/components/organisms/Contexts/SalesforceContext";
 
 export type ChatProps = {
@@ -64,7 +64,7 @@ export const Chat:FC<ChatProps> = ({
         <ChatContext.Provider value={{ append, isLoading, messages }}>
           <ChatMessages messages={messages} />
           {isFirst && messages.length < 2 && (
-            <ChatLoading/>
+            <Loading className="mt-8 w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-blue-600 fill-black"/>
           )}
         </ChatContext.Provider>
       )}

@@ -3,12 +3,14 @@ import { makeApiRequestRefreshingToken } from "@/shared/ApiHandlers/makeApiReque
 import { SalesforceAuthCache } from "@/shared/types/salesforceTypes";
 import {getCachedAuthData} from "@/shared/kv/cachedAuthData";
 
+export const runtime = "edge";
+
 export async function POST(req: Request) {
     try {
         const { salesforceId, query, refreshToken } = await req.json();
 
         const cachedRes: SalesforceAuthCache | null = await getCachedAuthData(refreshToken)
-        if (!cachedRes) return NextResponse.error();
+        if (!cachedRes) return new NextResponse("Unauthorized", { status: 401 });
         const encodedQuery = encodeURIComponent(query);
 
         let json = await makeApiRequestRefreshingToken(

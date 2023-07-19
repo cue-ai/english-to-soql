@@ -5,7 +5,7 @@ import {
   HumanChatMessage,
   SystemChatMessage,
 } from "langchain/schema";
-import { getSalesforceDescriptions } from "./getSalesforceDescriptions";
+import { getSalesforceDescriptions } from "@/shared/getSalesforceDescriptions";
 import { NextResponse } from "next/server";
 import {
   CachedSalesforceData,
@@ -110,6 +110,7 @@ export async function POST(req: Request) {
     )
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .catch((err: any) => {
+        console.error(err?.message as string)
       return new StreamingTextResponse(stream, {
         status: 401,
         statusText: err?.message as string,

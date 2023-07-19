@@ -1,9 +1,10 @@
 "use client";
-import * as process from "process";
 import {useContext} from "react";
 import {SalesforceContext} from "@/components/organisms/Contexts/SalesforceContext";
+import { useRouter } from 'next/navigation'
 
 export const Header = () => {
+    const router=useRouter()
     const {setSalesforceInfo,salesforceId}=useContext(SalesforceContext)
     return(
   <header className="sticky top-0 opacity-100 backdrop-blur-md z-50 flex items-center justify-between w-full  sm:px-24 px-4 shrink-0 ">
@@ -11,20 +12,31 @@ export const Header = () => {
       <div
         className={"inline-block flex cursor-pointer"}
         onClick={() => {
-          window.location.href = process.env.NEXT_PUBLIC_FRONTEND_URL as string;
+             router.push('/')
         }}
       >
         <img src="/salesforceLogo.svg" alt="Logo" className={"mr-2"} />
         <h1>AskSalesforce</h1>
       </div>
-        <div >{salesforceId &&<button
-            className="text-sm border border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-bold py-1 px-4 rounded"
-            onClick={() => setSalesforceInfo({refreshToken: "", salesforceId: ""})}
-        >
+        <div >{salesforceId &&
+            <div className={"flex"}>
+            <button
+                className="text-sm border border-red-500 text-red-500 hover:bg-opacity-75 hover:text-red-700 hover:border-red-700 font-bold py-1 px-4 rounded"
+                onClick={() => setSalesforceInfo({refreshToken: "", salesforceId: ""})}
+            >
             Logout
-        </button>}
-            <a className={"text-xs pl-2 text-gray-500 hover:text-gray-700 hidden md:inline-block"}
-                href={"https://www.notion.so/cue-ai/AskSalesforce-Terms-and-Services-66e0503f953a42df90735f6aee082e97?pvs=4"}>Terms and services</a>
+            </button>
+                <button
+                    className="ml-4 text-sm  bg-blue-500 text-white hover:bg-blue-700 hover:text-white font-bold py-1 px-4 rounded"
+                    onClick={() => {
+                        window.open(`https://airtable.com/shrjRgKZ52rUOxemg`);
+                    }}
+                >
+                    Get notified of new drops
+                </button>
+
+            </div>}
+
         </div>
 
     </div>
