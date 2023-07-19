@@ -18,7 +18,7 @@ export const Header = () => {
         <h1>AskSalesforce</h1>
       </div>
 
-            <div className={"flex"}>
+            <div className={"md:flex  md:pl-0 pl-20 space-x-1 sm:space-x-2 md:space-x-4  md:space-y-0 space-y-2 "}>
                 {salesforceId &&
             <button
                 className="text-sm border border-red-500 text-red-500 hover:bg-opacity-75 hover:text-red-700 hover:border-red-700 font-bold py-1 px-4 rounded"
@@ -28,12 +28,13 @@ export const Header = () => {
             </button>
                 }
                 <button
-                    className="ml-4 text-sm  bg-blue-500 text-white hover:bg-blue-700 hover:text-white font-bold py-1 px-4 rounded"
+                    className=" text-sm  bg-blue-500 text-white hover:bg-blue-700 hover:text-white font-bold py-1 px-4 rounded"
                     onClick={() => {
                         window.open(`https://airtable.com/shrjRgKZ52rUOxemg`);
                     }}
                 >
-                    Get notified of new drops
+                    <span className="md:hidden">Drops</span>
+                    <span className="hidden md:inline">Get notified of new drops</span>
                 </button>
 
 

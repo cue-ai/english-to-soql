@@ -19,7 +19,7 @@ export const Login:FC<LoginProps>= ({  onlyLoginBox }) => {
 
           <p
             className={
-              "lg:text-lg md:text-sm  font-medium  mx-auto mt-8 w-8/12 bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/50"
+              "lg:text-lg md:text-sm  font-medium  mx-auto mt-8 md:w-8/12 bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/50"
             }
           >
             Supercharge your team’s productivity with our free English to SOQL
@@ -30,7 +30,7 @@ export const Login:FC<LoginProps>= ({  onlyLoginBox }) => {
       )}
 
       <div
-        className={cn(!onlyLoginBox && "mt-8","mx-auto w-7/12 border-2 rounded-md border-blue-900 py-16 bg-gray-900")}
+        className={cn(!onlyLoginBox && "mt-8","mx-auto md:w-7/12 w-10/12 border-2 rounded-md border-blue-900 py-16 bg-gray-900")}
       >
         <h1 className={"text-gray-300"}>Login to generate SOQL </h1>
         <a
