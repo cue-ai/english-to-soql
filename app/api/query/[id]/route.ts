@@ -1,11 +1,10 @@
-import { NextResponse} from "next/server";
+import {NextRequest, NextResponse} from "next/server";
 import { CachedQueryResult } from "@/shared/types/salesforceTypes";
 import {getCachedQuery} from "@/shared/kv/cachedQuery";
-import {NextApiRequest} from "next";
 
 export const runtime = "edge";
 
-export async function GET(req: NextApiRequest, {params}:{params:{id:string}}) {
+export async function GET(req: NextRequest, {params}:{params:{id:string}}) {
     const {id} = params
     const res: CachedQueryResult | null = await getCachedQuery(id as string ??"");
 
