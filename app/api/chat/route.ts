@@ -19,7 +19,7 @@ import {getCachedAuthData} from "@/shared/kv/cachedAuthData";
 import {getCachedSalesforceData,setCachedSalesforceData} from "@/shared/kv/cachedSalesforceData";
 import {getCachedCount, incrementCachedCount} from "@/shared/kv/cachedCount";
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 const MAX_COUNT=50;
 export async function POST(req: Request) {

@@ -20,7 +20,7 @@ export const Chat:FC<ChatProps> = ({
   setIsFirst,
   onlyChat,
 }) => {
-  const {salesforceId,setSalesforceInfo,refreshToken}=useContext(SalesforceContext)
+  const {salesforceId,refreshToken}=useContext(SalesforceContext)
 
   const {
     append,
@@ -35,7 +35,8 @@ export const Chat:FC<ChatProps> = ({
       refreshToken
     },
     onError: () => {
-      setSalesforceInfo({salesforceId:"",refreshToken:""});
+      alert("There seems to be an error, could you try again/log out and log back in again.")
+      // setSalesforceInfo({salesforceId:"",refreshToken:""});
     },
     onFinish: () => {
       va.track("query", { query: input });
