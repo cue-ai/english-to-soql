@@ -45,7 +45,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
     <head>
-      {process.env.NODE_ENV === "production" && <Script id="show-banner">
+      {process.env.NODE_ENV === "production" && <Script id="clarityScript">
         {
           `(function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
