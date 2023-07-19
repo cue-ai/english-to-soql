@@ -12,5 +12,7 @@ export const incrementCachedCount=async(salesforceId:string)=>{
 }
 
 export const initCachedCount=async(salesforceId:string)=>{
+    const count=await getCachedCount(salesforceId);
+    if (count)return
     return await kv.set(`${salesforceId}/count`,0);
 }
