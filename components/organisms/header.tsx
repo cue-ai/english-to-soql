@@ -1,10 +1,9 @@
 "use client";
 import {useContext} from "react";
 import {SalesforceContext} from "@/components/organisms/Contexts/SalesforceContext";
-import { useRouter } from 'next/navigation'
+
 
 export const Header = () => {
-    const router=useRouter()
     const {setSalesforceInfo,salesforceId}=useContext(SalesforceContext)
     return(
   <header className="sticky top-0 opacity-100 backdrop-blur-md z-50 flex items-center justify-between w-full  sm:px-24 px-4 shrink-0 ">
@@ -12,7 +11,7 @@ export const Header = () => {
       <div
         className={"inline-block flex cursor-pointer"}
         onClick={() => {
-             router.push('/')
+            window.location.href = process.env.NEXT_PUBLIC_FRONTEND_URL as string;
         }}
       >
         <img src="/salesforceLogo.svg" alt="Logo" className={"mr-2"} />
