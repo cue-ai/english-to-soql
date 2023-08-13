@@ -9,6 +9,7 @@ import { FiMoon, FiSun } from "react-icons/fi";
 
 export const ThemeToggle: FC = () => {
   const { setTheme, theme } = useTheme();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, startTransition] = React.useTransition();
 
   return (
